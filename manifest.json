@@ -20,6 +20,7 @@
         "<all_urls>"
       ],
       "js": [
+        "content/colorBlindness.js",
         "content/translationClient.js",
         "content/bionicEngine.js",
         "content/content.js"

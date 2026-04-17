@@ -18,6 +18,8 @@
         .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
         input:checked + .slider { background-color: #4299e1; }
         input:checked + .slider:before { transform: translateX(20px); }
+        .color-select { padding: 4px 8px; border-radius: 6px; border: 1px solid #cbd5e0; font-family: inherit; font-size: 13px; background: white; outline: none; cursor: pointer; }
+        .color-select:focus { border-color: #4299e1; }
     </style>
 </head>
 <body>
@@ -36,13 +38,44 @@
 
     <div class="control-group">
         <div class="label-container">
-            <span class="label">Dyslexia Styling</span>
-            <span class="sub-label">Improves font spacing</span>
+            <span class="label">Color Blindness</span>
+            <span class="sub-label">Specialized palettes</span>
         </div>
-        <label class="switch">
-            <input type="checkbox" id="toggle-styling">
-            <span class="slider"></span>
-        </label>
+        <select id="cb-mode" class="color-select">
+            <option value="none">None</option>
+            <option value="protanopia">Type 1 (Red)</option>
+            <option value="deuteranopia">Type 2 (Green)</option>
+            <option value="tritanopia">Type 3 (Blue)</option>
+            <option value="achromatopsia">Type 4 (Mono)</option>
+            <option value="mild">Type 5 (Mild)</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <div class="label-container">
+            <span class="label">Background Color</span>
+            <span class="sub-label">For color blindness & dyslexia</span>
+        </div>
+        <select id="bg-color" class="color-select">
+            <option value="default">Default</option>
+            <option value="#FDF6E3">Warm Sepia</option>
+            <option value="#E0F4FF">Soft Blue</option>
+            <option value="#121212">High Contrast Dark</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <div class="label-container">
+            <span class="label">Text Color</span>
+            <span class="sub-label">For readability</span>
+        </div>
+        <select id="text-color" class="color-select">
+            <option value="default">Default</option>
+            <option value="#0B192C">Dark Navy</option>
+            <option value="#000000">Pure Black</option>
+            <option value="#FFFFFF">Pure White</option>
+            <option value="#FFFF00">Yellow</option>
+        </select>
     </div>
 
     <div class="control-group">

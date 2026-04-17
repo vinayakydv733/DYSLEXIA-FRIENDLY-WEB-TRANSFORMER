@@ -1,49 +1,54 @@
 // content/content.js
 let currentSettings = {
     bionicEnabled: false,
-    stylingEnabled: false,
-    dictEnabled: false
+    dictEnabled: false,
+    bgColor: 'default',
+    textColor: 'default',
+    cbMode: 'none'
 };
 
-const STYLE_ID = 'dyslexia-friendly-styles';
+const COLOR_STYLE_ID = 'dyslexia-friendly-colors';
 
-function applyStyles(enabled) {
-    let styleEl = document.getElementById(STYLE_ID);
-    if (enabled) {
-        if (!styleEl) {
-            styleEl = document.createElement('style');
-            styleEl.id = STYLE_ID;
-            // Increased line height, letter spacing, word spacing, and a clean sans-serif font stack
-            styleEl.textContent = `
-                body {
-                    font-family: 'Comic Sans MS', 'OpenDyslexic', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
-                    line-height: 1.6 !important;
-                    letter-spacing: 0.05em !important;
-                    word-spacing: 0.15em !important;
-                    background-color: #fcfcfc !important; 
-                    color: #111 !important;
-                }
-                p, h1, h2, h3, h4, h5, h6, span, div, a, li, td, th {
-                    font-family: inherit !important;
-                    line-height: inherit !important;
-                    letter-spacing: inherit !important;
-                    word-spacing: inherit !important;
-                }
-            `;
-            document.head.appendChild(styleEl);
-        }
-    } else {
-        if (styleEl) {
-            styleEl.remove();
-        }
+function applyColors(bgColor, textColor) {
+    let styleEl = document.getElementById(COLOR_STYLE_ID);
+    
+    if (bgColor === 'default' && textColor === 'default') {
+        if (styleEl) styleEl.remove();
+        return;
     }
+
+    if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = COLOR_STYLE_ID;
+        document.head.appendChild(styleEl);
+    }
+    
+    let bgRule = bgColor !== 'default' ? `background-color: ${bgColor} !important;` : '';
+    let textRule = textColor !== 'default' ? `color: ${textColor} !important;` : '';
+
+    styleEl.textContent = `
+        *:not(img):not(video):not(canvas):not(svg) {
+            ${bgRule}
+            ${textRule}
+        }
+    `;
 }
 
 function processSettings(settings) {
     currentSettings = settings;
 
-    // 1. Accessibility Styling
-    applyStyles(settings.stylingEnabled);
+    // 1. Accessibility Colors
+    let isCbActive = false;
+    if (window.applyColorBlindnessMode) {
+        isCbActive = window.applyColorBlindnessMode(settings.cbMode);
+    }
+    
+    if (!isCbActive) {
+        applyColors(settings.bgColor, settings.textColor);
+    } else {
+        let styleEl = document.getElementById(COLOR_STYLE_ID);
+        if (styleEl) styleEl.remove();
+    }
 
     // 2. Bionic Engine
     if (settings.bionicEnabled) {
@@ -61,12 +66,13 @@ function processSettings(settings) {
 }
 
 // Initial Load
-chrome.storage.sync.get(['bionicEnabled', 'stylingEnabled', 'dictEnabled'], (data) => {
-    // defaults true if not explicitly false
+chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'bgColor', 'textColor', 'cbMode'], (data) => {
     let settings = {
         bionicEnabled: data.bionicEnabled !== false,
-        stylingEnabled: data.stylingEnabled !== false,
-        dictEnabled: data.dictEnabled !== false
+        dictEnabled: data.dictEnabled !== false,
+        bgColor: data.bgColor || 'default',
+        textColor: data.textColor || 'default',
+        cbMode: data.cbMode || 'none'
     };
     processSettings(settings);
 });

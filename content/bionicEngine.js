@@ -39,7 +39,7 @@ function processTextNode(node) {
         }
 
         // Apply algorithm: Bolding first ~40% of the word
-        const letterCount = part.replace(/[^a-zA-Z0-9]/g, '').length;
+        const letterCount = part.replace(/[^\p{L}\p{M}\p{N}]/gu, '').length;
         if (letterCount <= 1) {
             fragment.appendChild(document.createTextNode(part));
             return;

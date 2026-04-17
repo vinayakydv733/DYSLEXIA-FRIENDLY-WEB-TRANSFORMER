@@ -1,20 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
     const bionicToggle = document.getElementById('toggle-bionic');
-    const stylingToggle = document.getElementById('toggle-styling');
     const dictToggle = document.getElementById('toggle-dict');
+    const bgColorSelect = document.getElementById('bg-color');
+    const textColorSelect = document.getElementById('text-color');
+    const cbModeSelect = document.getElementById('cb-mode');
 
     // Load saved settings
-    chrome.storage.sync.get(['bionicEnabled', 'stylingEnabled', 'dictEnabled'], (data) => {
+    chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'bgColor', 'textColor', 'cbMode'], (data) => {
         bionicToggle.checked = data.bionicEnabled !== false; // Default true
-        stylingToggle.checked = data.stylingEnabled !== false; // Default true
         dictToggle.checked = data.dictEnabled !== false; // Default true
+        if (data.bgColor) bgColorSelect.value = data.bgColor;
+        if (data.textColor) textColorSelect.value = data.textColor;
+        if (data.cbMode) cbModeSelect.value = data.cbMode;
     });
 
     function saveSettings() {
         const settings = {
             bionicEnabled: bionicToggle.checked,
-            stylingEnabled: stylingToggle.checked,
-            dictEnabled: dictToggle.checked
+            dictEnabled: dictToggle.checked,
+            bgColor: bgColorSelect.value,
+            textColor: textColorSelect.value,
+            cbMode: cbModeSelect.value
         };
         chrome.storage.sync.set(settings, () => {
             // Tell content script to update live
@@ -32,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     bionicToggle.addEventListener('change', saveSettings);
-    stylingToggle.addEventListener('change', saveSettings);
+    bgColorSelect.addEventListener('change', saveSettings);
+    textColorSelect.addEventListener('change', saveSettings);
     dictToggle.addEventListener('change', saveSettings);
+    cbModeSelect.addEventListener('change', saveSettings);
 });

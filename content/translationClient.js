@@ -41,13 +41,15 @@ function hideTooltip() {
 }
 
 async function lookupWord(word, x, y) {
-    const cleanWord = word.trim().replace(/[^a-zA-Z]/g, '');
+    const cleanWord = word.trim().replace(/[^\p{L}\p{M}\p{N}]/gu, '');
     if (!cleanWord) return;
 
-    showTooltip(x, y, \`<i>Loading definition for "\${cleanWord}"...</i>\`);
+    showTooltip(x, y, `<i>Loading definition for "${cleanWord}"...</i>`);
 
     try {
-        const res = await fetch(\`https://api.dictionaryapi.dev/api/v2/entries/en/\${cleanWord}\`);
+        const isHindi = /[\u0900-\u097F]/.test(cleanWord);
+        const lang = isHindi ? 'hi' : 'en';
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/${lang}/${cleanWord}`);
         if (!res.ok) throw new Error("Not found");
         const data = await res.json();
         
