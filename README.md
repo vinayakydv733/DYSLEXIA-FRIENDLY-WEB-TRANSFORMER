@@ -21,6 +21,18 @@ Intelligently re-colors the web page using sophisticated matrix filters. Feature
 ### 4. Integrated Dictionary (with Hindi Support)
 A built-in look-up engine enabling users to quickly select words and see their definitions or translations without losing the page's context. Includes comprehensive support for Latin and Hindi text rendering.
 
+## 🧰 Tech Stack
+
+- **Core Languages**: Vanilla JavaScript (ES6+), HTML5, CSS3
+- **Dependencies**: None. Pure Vanilla JS for maximum security, privacy, and lightweight performance.
+- **Browser APIs Used**:
+  - **Chrome Extension API** (Manifest V3)
+  - **Web Speech API** (SpeechSynthesis for Text-to-Speech rendering)
+  - **DOM MutationObserver API** (For highly efficient, non-blocking DOM text processing)
+  - **SVG Matrix Filters** (To apply accurate color-blindness manipulations)
+  - **Chrome Storage API** (For saving and syncing user accessibility preferences)
+- **Design/Styling**: Custom CSS focused on visually stunning but highly readable and accessible UI/UX.
+
 ## 🛠️ Architecture
 
 Built on modern **Manifest V3** standards with modularly separated business logic to guarantee performance:
