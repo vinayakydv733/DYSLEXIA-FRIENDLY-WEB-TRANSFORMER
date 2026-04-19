@@ -23,6 +23,7 @@
         "content/colorBlindness.js",
         "content/translationClient.js",
         "content/bionicEngine.js",
+        "content/ttsEngine.js",
         "content/content.js"
       ]
     }

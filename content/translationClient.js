@@ -28,8 +28,8 @@ function createTooltip() {
 function showTooltip(x, y, text) {
     if (!tooltipElement) createTooltip();
     tooltipElement.innerHTML = text;
-    tooltipElement.style.left = \`\${x + 10}px\`;
-    tooltipElement.style.top = \`\${y + 15}px\`;
+    tooltipElement.style.left = `${x + 10}px`;
+    tooltipElement.style.top = `${y + 15}px`;
     tooltipElement.style.display = 'block';
 }
 
@@ -57,14 +57,14 @@ async function lookupWord(word, x, y) {
         const partOfSpeech = firstMeaning.partOfSpeech;
         const definition = firstMeaning.definitions[0].definition;
 
-        let content = \`
-            <div style="font-weight:bold; margin-bottom: 4px; font-size:16px;">\${cleanWord}</div>
-            <div style="font-size: 12px; font-style: italic; color: #a0aec0; margin-bottom: 4px;">\${partOfSpeech}</div>
-            <div>\${definition}</div>
-        \`;
+        let content = `
+            <div style="font-weight:bold; margin-bottom: 4px; font-size:16px;">${cleanWord}</div>
+            <div style="font-size: 12px; font-style: italic; color: #a0aec0; margin-bottom: 4px;">${partOfSpeech}</div>
+            <div>${definition}</div>
+        `;
         showTooltip(x, y, content);
     } catch (e) {
-        showTooltip(x, y, \`No definition found for "\${cleanWord}".\`);
+        showTooltip(x, y, `No definition found for "${cleanWord}".`);
     }
 }
 

@@ -1,7 +1,8 @@
 // content/content.js
-let currentSettings = {
+window.currentSettings = {
     bionicEnabled: false,
     dictEnabled: false,
+    ttsEnabled: false,
     bgColor: 'default',
     textColor: 'default',
     cbMode: 'none'
@@ -35,7 +36,7 @@ function applyColors(bgColor, textColor) {
 }
 
 function processSettings(settings) {
-    currentSettings = settings;
+    window.currentSettings = settings;
 
     // 1. Accessibility Colors
     let isCbActive = false;
@@ -63,13 +64,21 @@ function processSettings(settings) {
     } else {
         if (window.disableDictionary) window.disableDictionary();
     }
+
+    // 4. TTS Engine
+    if (settings.ttsEnabled) {
+        if (window.enableTTS) window.enableTTS();
+    } else {
+        if (window.disableTTS) window.disableTTS();
+    }
 }
 
 // Initial Load
-chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'bgColor', 'textColor', 'cbMode'], (data) => {
+chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode'], (data) => {
     let settings = {
         bionicEnabled: data.bionicEnabled !== false,
         dictEnabled: data.dictEnabled !== false,
+        ttsEnabled: data.ttsEnabled === true,
         bgColor: data.bgColor || 'default',
         textColor: data.textColor || 'default',
         cbMode: data.cbMode || 'none'
