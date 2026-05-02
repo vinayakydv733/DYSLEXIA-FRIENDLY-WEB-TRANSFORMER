@@ -5,7 +5,8 @@ window.currentSettings = {
     ttsEnabled: false,
     bgColor: 'default',
     textColor: 'default',
-    cbMode: 'none'
+    cbMode: 'none',
+    translateLang: 'none'
 };
 
 const COLOR_STYLE_ID = 'dyslexia-friendly-colors';
@@ -74,14 +75,15 @@ function processSettings(settings) {
 }
 
 // Initial Load
-chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode'], (data) => {
+chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang'], (data) => {
     let settings = {
         bionicEnabled: data.bionicEnabled !== false,
         dictEnabled: data.dictEnabled !== false,
         ttsEnabled: data.ttsEnabled === true,
         bgColor: data.bgColor || 'default',
         textColor: data.textColor || 'default',
-        cbMode: data.cbMode || 'none'
+        cbMode: data.cbMode || 'none',
+        translateLang: data.translateLang || 'none'
     };
     processSettings(settings);
 });

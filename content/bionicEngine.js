@@ -103,6 +103,10 @@ window.applyBionicReading = function() {
     walkDOM(document.body);
 };
 
+window.applyBionicReadingToElement = function(element) {
+    walkDOM(element);
+};
+
 window.removeBionicReading = function() {
     if (!bionicApplied) return;
     bionicApplied = false;

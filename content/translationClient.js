@@ -41,45 +41,132 @@ function hideTooltip() {
 }
 
 async function lookupWord(word, x, y) {
-    const cleanWord = word.trim().replace(/[^\p{L}\p{M}\p{N}]/gu, '');
+    const cleanWord = word.trim();
     if (!cleanWord) return;
 
-    showTooltip(x, y, `<i>Loading definition for "${cleanWord}"...</i>`);
+    const isSingleWord = cleanWord.trim().split(/\s+/).length === 1;
+    const dictWord = isSingleWord ? cleanWord.replace(/[^\p{L}\p{M}\p{N}]/gu, '') : null;
 
-    try {
-        const isHindi = /[\u0900-\u097F]/.test(cleanWord);
-        const lang = isHindi ? 'hi' : 'en';
-        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/${lang}/${cleanWord}`);
-        if (!res.ok) throw new Error("Not found");
-        const data = await res.json();
-        
-        const firstMeaning = data[0].meanings[0];
-        const partOfSpeech = firstMeaning.partOfSpeech;
-        const definition = firstMeaning.definitions[0].definition;
+    showTooltip(x, y, `<i>Loading for "${cleanWord.length > 30 ? cleanWord.substring(0, 30) + '...' : cleanWord}"...</i>`);
 
-        let content = `
-            <div style="font-weight:bold; margin-bottom: 4px; font-size:16px;">${cleanWord}</div>
-            <div style="font-size: 12px; font-style: italic; color: #a0aec0; margin-bottom: 4px;">${partOfSpeech}</div>
-            <div>${definition}</div>
-        `;
-        showTooltip(x, y, content);
-    } catch (e) {
-        showTooltip(x, y, `No definition found for "${cleanWord}".`);
+    let translationText = "";
+    if (window.currentSettings && window.currentSettings.translateLang && window.currentSettings.translateLang !== 'none') {
+        try {
+            const targetLang = window.currentSettings.translateLang;
+            const translateData = await new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage(
+                    { action: 'translateWord', word: cleanWord, targetLang: targetLang },
+                    response => {
+                        if (chrome.runtime.lastError) {
+                            reject(chrome.runtime.lastError);
+                        } else if (!response || !response.success) {
+                            reject(response ? response.error : 'Unknown error');
+                        } else {
+                            resolve(response.data);
+                        }
+                    }
+                );
+            });
+            if (translateData && translateData[0]) {
+                translationText = translateData[0].map(part => part[0]).join('');
+            }
+        } catch(e) {
+            console.error("Translation error:", e);
+        }
+    }
+
+    let englishTranslation = "";
+    if (!isSingleWord) {
+        try {
+            const engData = await new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage(
+                    { action: 'translateWord', word: cleanWord, targetLang: 'en' },
+                    response => {
+                        if (chrome.runtime.lastError) reject(chrome.runtime.lastError);
+                        else if (!response || !response.success) reject(response ? response.error : 'Unknown error');
+                        else resolve(response.data);
+                    }
+                );
+            });
+            if (engData && engData[0]) {
+                const engText = engData[0].map(part => part[0]).join('');
+                if (engText.toLowerCase() !== cleanWord.toLowerCase() && engText.toLowerCase() !== translationText.toLowerCase()) {
+                    englishTranslation = engText;
+                }
+            }
+        } catch(e) {}
+    }
+
+    let definitionContent = "";
+    if (isSingleWord && dictWord) {
+        try {
+            const isHindi = /[\u0900-\u097F]/.test(dictWord);
+            const lang = isHindi ? 'hi' : 'en';
+            const data = await new Promise((resolve, reject) => {
+                chrome.runtime.sendMessage(
+                    { action: 'lookupDictionary', word: dictWord, lang: lang },
+                    response => {
+                        if (chrome.runtime.lastError) {
+                            reject(chrome.runtime.lastError);
+                        } else if (!response || !response.success) {
+                            reject(response ? response.error : 'Unknown error');
+                        } else {
+                            resolve(response.data);
+                        }
+                    }
+                );
+            });
+            
+            const firstMeaning = data[0].meanings[0];
+            const partOfSpeech = firstMeaning.partOfSpeech;
+            const definition = firstMeaning.definitions[0].definition;
+            definitionContent = `
+                <div style="font-size: 12px; font-style: italic; color: #a0aec0; margin-bottom: 4px;">${partOfSpeech}</div>
+                <div>${definition}</div>
+            `;
+        } catch (e) {
+            definitionContent = `<div style="color: #a0aec0;">No definition found.</div>`;
+        }
+    }
+
+    let translationContent = "";
+    if (translationText) {
+        translationContent = `<div style="font-size: 14px; margin-bottom: 6px; color: #4299e1;"><b>Translation:</b> <span class="translated-word">${translationText}</span></div>`;
+    }
+
+    if (englishTranslation) {
+        translationContent += `<div style="font-size: 14px; margin-bottom: 6px; color: #48bb78;"><b>English:</b> <span class="translated-word">${englishTranslation}</span></div>`;
+    }
+
+    let content = `
+        <div style="font-weight:bold; margin-bottom: 4px; font-size:16px;">${cleanWord}</div>
+        ${translationContent}
+        ${definitionContent}
+    `;
+
+    showTooltip(x, y, content);
+
+    if (window.currentSettings && window.currentSettings.bionicEnabled) {
+        if (window.applyBionicReadingToElement && tooltipElement) {
+            window.applyBionicReadingToElement(tooltipElement);
+        }
     }
 }
 
-const handleDoubleClick = (e) => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
-    
-    const text = selection.toString();
-    if (text && text.trim().length > 0 && text.trim().split(/\\s+/).length === 1) {
-        lookupWord(text, e.pageX, e.pageY);
-    }
+const handleMouseUp = (e) => {
+    setTimeout(() => {
+        const selection = window.getSelection();
+        if (!selection || selection.rangeCount === 0) return;
+        
+        const text = selection.toString();
+        if (text && text.trim().length > 0 && text.trim().length < 300) {
+            lookupWord(text, e.pageX, e.pageY);
+        }
+    }, 10);
 };
 
-const handleDocumentClick = (e) => {
-    // Hide tooltip if clicking anywhere else
+const handleMouseDown = (e) => {
+    if (tooltipElement && tooltipElement.contains(e.target)) return;
     hideTooltip();
 };
 
@@ -87,14 +174,14 @@ window.enableDictionary = function() {
     if (dictLoaded) return;
     dictLoaded = true;
     createTooltip();
-    document.addEventListener('dblclick', handleDoubleClick);
-    document.addEventListener('click', handleDocumentClick);
+    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mousedown', handleMouseDown);
 };
 
 window.disableDictionary = function() {
     if (!dictLoaded) return;
     dictLoaded = false;
     hideTooltip();
-    document.removeEventListener('dblclick', handleDoubleClick);
-    document.removeEventListener('click', handleDocumentClick);
+    document.removeEventListener('mouseup', handleMouseUp);
+    document.removeEventListener('mousedown', handleMouseDown);
 };

@@ -5,15 +5,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const bgColorSelect = document.getElementById('bg-color');
     const textColorSelect = document.getElementById('text-color');
     const cbModeSelect = document.getElementById('cb-mode');
+    const translateLangSelect = document.getElementById('translate-lang');
 
     // Load saved settings
-    chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode'], (data) => {
+    chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang'], (data) => {
         bionicToggle.checked = data.bionicEnabled !== false; // Default true
         dictToggle.checked = data.dictEnabled !== false; // Default true
         ttsToggle.checked = data.ttsEnabled === true; // Default false
         if (data.bgColor) bgColorSelect.value = data.bgColor;
         if (data.textColor) textColorSelect.value = data.textColor;
         if (data.cbMode) cbModeSelect.value = data.cbMode;
+        if (data.translateLang) translateLangSelect.value = data.translateLang;
     });
 
     function saveSettings() {
@@ -23,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ttsEnabled: ttsToggle.checked,
             bgColor: bgColorSelect.value,
             textColor: textColorSelect.value,
-            cbMode: cbModeSelect.value
+            cbMode: cbModeSelect.value,
+            translateLang: translateLangSelect.value
         };
         chrome.storage.sync.set(settings, () => {
             // Tell content script to update live
@@ -46,4 +49,5 @@ document.addEventListener('DOMContentLoaded', () => {
     dictToggle.addEventListener('change', saveSettings);
     ttsToggle.addEventListener('change', saveSettings);
     cbModeSelect.addEventListener('change', saveSettings);
+    translateLangSelect.addEventListener('change', saveSettings);
 });
