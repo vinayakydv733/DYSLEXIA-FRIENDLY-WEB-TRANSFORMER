@@ -24,6 +24,7 @@
         "content/translationClient.js",
         "content/bionicEngine.js",
         "content/ttsEngine.js",
+        "content/aiAgent.js",
         "content/content.js"
       ]
     }

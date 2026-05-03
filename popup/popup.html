@@ -80,6 +80,46 @@
 
     <div class="control-group">
         <div class="label-container">
+            <span class="label">Font</span>
+            <span class="sub-label">Dyslexia-friendly options</span>
+        </div>
+        <select id="font-family" class="color-select">
+            <option value="default">Default</option>
+            <option value="'Lexend', sans-serif">Lexend</option>
+            <option value="'Comic Sans MS', cursive, sans-serif">Comic Sans</option>
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="Verdana, sans-serif">Verdana</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <div class="label-container">
+            <span class="label">Font Size</span>
+            <span class="sub-label">Adjust text scale</span>
+        </div>
+        <select id="font-size" class="color-select">
+            <option value="default">Default</option>
+            <option value="16px">Medium</option>
+            <option value="20px">Large</option>
+            <option value="24px">X-Large</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <div class="label-container">
+            <span class="label">Line Spacing</span>
+            <span class="sub-label">Improves readability</span>
+        </div>
+        <select id="line-spacing" class="color-select">
+            <option value="default">Default</option>
+            <option value="1.5">Relaxed (1.5)</option>
+            <option value="1.75">Loose (1.75)</option>
+            <option value="2.0">Double (2.0)</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <div class="label-container">
             <span class="label">Dictionary</span>
             <span class="sub-label">Double-click for definition</span>
         </div>
@@ -119,6 +159,21 @@
             <span class="slider"></span>
         </label>
     </div>
+
+    <hr style="border:0; border-top: 1px solid #cbd5e0; margin: 15px 0;">
+    <h2 style="font-size: 14px; margin-bottom: 10px; color: #1a365d;">Agentic AI Features</h2>
+    
+    <div class="control-group" style="flex-direction: column; align-items: flex-start; padding-bottom: 8px;">
+        <div class="label-container" style="margin-bottom: 8px;">
+            <span class="label">Optional: Gemini API Key</span>
+            <span class="sub-label">Leave empty to use Free Built-in AI</span>
+        </div>
+        <input type="password" id="gemini-key" placeholder="Enter API Key..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; font-family: inherit;">
+    </div>
+    
+    <button id="btn-ai-summarize" style="width: 100%; background: #4299e1; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: background 0.2s;">
+        Summarize & Simplify Page
+    </button>
 
     <script src="popup.js"></script>
 </body>

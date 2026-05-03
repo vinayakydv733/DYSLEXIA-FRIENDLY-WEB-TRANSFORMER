@@ -6,10 +6,45 @@ window.currentSettings = {
     bgColor: 'default',
     textColor: 'default',
     cbMode: 'none',
-    translateLang: 'none'
+    translateLang: 'none',
+    fontFamily: 'default',
+    fontSize: 'default',
+    lineSpacing: 'default'
 };
 
 const COLOR_STYLE_ID = 'dyslexia-friendly-colors';
+const TYPOGRAPHY_STYLE_ID = 'dyslexia-friendly-typography';
+
+function applyTypography(settings) {
+    let styleEl = document.getElementById(TYPOGRAPHY_STYLE_ID);
+    
+    if (settings.fontFamily === 'default' && settings.fontSize === 'default' && settings.lineSpacing === 'default') {
+        if (styleEl) styleEl.remove();
+        return;
+    }
+
+    if (!styleEl) {
+        styleEl = document.createElement('style');
+        styleEl.id = TYPOGRAPHY_STYLE_ID;
+        document.head.appendChild(styleEl);
+    }
+    
+    let css = '';
+    const allTags = 'body, p, h1, h2, h3, h4, h5, h6, li, a, span, div, td, th, label, input, button, textarea';
+    const textTags = 'p, li, a, span, td, th, label, input, button, textarea';
+
+    if (settings.fontFamily !== 'default') {
+        css += `${allTags} { font-family: ${settings.fontFamily} !important; }\n`;
+    }
+    if (settings.fontSize !== 'default') {
+        css += `${textTags} { font-size: ${settings.fontSize} !important; }\n`;
+    }
+    if (settings.lineSpacing !== 'default') {
+        css += `${allTags} { line-height: ${settings.lineSpacing} !important; }\n`;
+    }
+
+    styleEl.textContent = css;
+}
 
 function applyColors(bgColor, textColor) {
     let styleEl = document.getElementById(COLOR_STYLE_ID);
@@ -52,6 +87,9 @@ function processSettings(settings) {
         if (styleEl) styleEl.remove();
     }
 
+    // 1.5 Typography
+    applyTypography(settings);
+
     // 2. Bionic Engine
     if (settings.bionicEnabled) {
         if (window.applyBionicReading) window.applyBionicReading();
@@ -75,7 +113,7 @@ function processSettings(settings) {
 }
 
 // Initial Load
-chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang'], (data) => {
+chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang', 'fontFamily', 'fontSize', 'lineSpacing'], (data) => {
     let settings = {
         bionicEnabled: data.bionicEnabled !== false,
         dictEnabled: data.dictEnabled !== false,
@@ -83,7 +121,10 @@ chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor'
         bgColor: data.bgColor || 'default',
         textColor: data.textColor || 'default',
         cbMode: data.cbMode || 'none',
-        translateLang: data.translateLang || 'none'
+        translateLang: data.translateLang || 'none',
+        fontFamily: data.fontFamily || 'default',
+        fontSize: data.fontSize || 'default',
+        lineSpacing: data.lineSpacing || 'default'
     };
     processSettings(settings);
 });
