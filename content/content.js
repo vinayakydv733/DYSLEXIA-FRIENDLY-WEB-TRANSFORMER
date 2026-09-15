@@ -9,7 +9,8 @@ window.currentSettings = {
     translateLang: 'none',
     fontFamily: 'default',
     fontSize: 'default',
-    lineSpacing: 'default'
+    lineSpacing: 'default',
+    rulerEnabled: false
 };
 
 const COLOR_STYLE_ID = 'dyslexia-friendly-colors';
@@ -110,10 +111,17 @@ function processSettings(settings) {
     } else {
         if (window.disableTTS) window.disableTTS();
     }
+
+    // 5. Reading Ruler
+    if (settings.rulerEnabled) {
+        if (window.enableReadingRuler) window.enableReadingRuler();
+    } else {
+        if (window.disableReadingRuler) window.disableReadingRuler();
+    }
 }
 
 // Initial Load
-chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang', 'fontFamily', 'fontSize', 'lineSpacing'], (data) => {
+chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang', 'fontFamily', 'fontSize', 'lineSpacing', 'rulerEnabled'], (data) => {
     let settings = {
         bionicEnabled: data.bionicEnabled !== false,
         dictEnabled: data.dictEnabled !== false,
@@ -124,7 +132,8 @@ chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor'
         translateLang: data.translateLang || 'none',
         fontFamily: data.fontFamily || 'default',
         fontSize: data.fontSize || 'default',
-        lineSpacing: data.lineSpacing || 'default'
+        lineSpacing: data.lineSpacing || 'default',
+        rulerEnabled: data.rulerEnabled === true
     };
     processSettings(settings);
 });

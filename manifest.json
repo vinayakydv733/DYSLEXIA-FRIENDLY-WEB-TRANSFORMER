@@ -25,6 +25,7 @@
         "content/bionicEngine.js",
         "content/ttsEngine.js",
         "content/aiAgent.js",
+        "content/readingRuler.js",
         "content/content.js"
       ]
     }

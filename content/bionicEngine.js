@@ -77,34 +77,44 @@ function processTextNode(node) {
     return node;
 }
 
-function walkDOM(node) {
-    if (!node) return;
-
-    let child = node.firstChild;
-    while (child) {
-        let next = child.nextSibling;
-        if (child.nodeType === Node.TEXT_NODE) {
-            if (shouldProcessNode(child)) {
-                let newNode = processTextNode(child);
-                if (newNode !== child) {
-                    child.parentNode.replaceChild(newNode, child);
-                }
+function runBionicOnElement(element) {
+    if (!element) return;
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(node) {
+            if (!node.parentNode) return NodeFilter.FILTER_REJECT;
+            const parentTag = node.parentNode.tagName ? node.parentNode.tagName.toLowerCase() : '';
+            const skipTags = ['script', 'style', 'textarea', 'input', 'code', 'pre', 'noscript'];
+            if (skipTags.includes(parentTag)) return NodeFilter.FILTER_REJECT;
+            
+            if (node.parentNode.classList && (node.parentNode.classList.contains(BIONIC_CLASS) || node.parentNode.classList.contains(BIONIC_BOLD_CLASS))) {
+                return NodeFilter.FILTER_REJECT;
             }
-        } else if (child.nodeType === Node.ELEMENT_NODE) {
-            walkDOM(child);
+            if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+            return NodeFilter.FILTER_ACCEPT;
         }
-        child = next;
+    });
+
+    const nodes = [];
+    while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
     }
+
+    nodes.forEach(node => {
+        let newNode = processTextNode(node);
+        if (newNode !== node && node.parentNode) {
+            node.parentNode.replaceChild(newNode, node);
+        }
+    });
 }
 
 window.applyBionicReading = function() {
     if (bionicApplied) return;
     bionicApplied = true;
-    walkDOM(document.body);
+    runBionicOnElement(document.body);
 };
 
 window.applyBionicReadingToElement = function(element) {
-    walkDOM(element);
+    runBionicOnElement(element);
 };
 
 window.removeBionicReading = function() {

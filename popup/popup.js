@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bionicToggle = document.getElementById('toggle-bionic');
     const dictToggle = document.getElementById('toggle-dict');
     const ttsToggle = document.getElementById('toggle-tts');
+    const rulerToggle = document.getElementById('toggle-ruler');
     const bgColorSelect = document.getElementById('bg-color');
     const textColorSelect = document.getElementById('text-color');
     const cbModeSelect = document.getElementById('cb-mode');
@@ -13,10 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAiSummarize = document.getElementById('btn-ai-summarize');
 
     // Load saved settings
-    chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang', 'fontFamily', 'fontSize', 'lineSpacing', 'geminiKey'], (data) => {
+    chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'rulerEnabled', 'bgColor', 'textColor', 'cbMode', 'translateLang', 'fontFamily', 'fontSize', 'lineSpacing', 'geminiKey'], (data) => {
         bionicToggle.checked = data.bionicEnabled !== false; // Default true
         dictToggle.checked = data.dictEnabled !== false; // Default true
         ttsToggle.checked = data.ttsEnabled === true; // Default false
+        rulerToggle.checked = data.rulerEnabled === true; // Default false
         if (data.bgColor) bgColorSelect.value = data.bgColor;
         if (data.textColor) textColorSelect.value = data.textColor;
         if (data.cbMode) cbModeSelect.value = data.cbMode;
@@ -32,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bionicEnabled: bionicToggle.checked,
             dictEnabled: dictToggle.checked,
             ttsEnabled: ttsToggle.checked,
+            rulerEnabled: rulerToggle.checked,
             bgColor: bgColorSelect.value,
             textColor: textColorSelect.value,
             cbMode: cbModeSelect.value,
@@ -60,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     textColorSelect.addEventListener('change', saveSettings);
     dictToggle.addEventListener('change', saveSettings);
     ttsToggle.addEventListener('change', saveSettings);
+    rulerToggle.addEventListener('change', saveSettings);
     cbModeSelect.addEventListener('change', saveSettings);
     translateLangSelect.addEventListener('change', saveSettings);
     fontFamilySelect.addEventListener('change', saveSettings);
