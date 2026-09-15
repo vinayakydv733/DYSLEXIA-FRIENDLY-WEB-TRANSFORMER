@@ -21,6 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnAiSummarize = document.getElementById('btn-ai-summarize');
     const btnAiSimplify = document.getElementById('btn-ai-simplify');
 
+    // Quick Access UI Elements
+    const qaBionic = document.getElementById('qa-bionic');
+    const qaFocus = document.getElementById('qa-focus');
+    const qaRead = document.getElementById('qa-read');
+
     // Default settings
     const defaultSettings = {
         bionicEnabled: true,
@@ -38,6 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let userCustomSettings = {};
+
+    function updateQAVisuals() {
+        if (qaBionic && bionicToggle) {
+            qaBionic.classList.toggle('active', bionicToggle.checked);
+        }
+        if (qaRead && ttsToggle) {
+            qaRead.classList.toggle('active', ttsToggle.checked);
+        }
+    }
 
     // Load saved settings
     chrome.storage.sync.get(Object.keys(defaultSettings), (data) => {
@@ -64,6 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (settings.presetMode === 'custom') {
             userCustomSettings = { ...settings };
         }
+        
+        updateQAVisuals();
     });
 
     function saveSettings(skipPresetUpdate = false) {
@@ -134,7 +150,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
+            updateQAVisuals();
             saveSettings(true);
+        });
+    }
+
+    // Quick Access Listeners
+    if (qaBionic) {
+        qaBionic.addEventListener('click', () => {
+            if (bionicToggle) {
+                bionicToggle.checked = !bionicToggle.checked;
+                updateQAVisuals();
+                saveSettings(false);
+            }
+        });
+    }
+    
+    if (qaRead) {
+        qaRead.addEventListener('click', () => {
+            if (ttsToggle) {
+                ttsToggle.checked = !ttsToggle.checked;
+                updateQAVisuals();
+                saveSettings(false);
+            }
+        });
+    }
+
+    if (qaFocus) {
+        qaFocus.addEventListener('click', () => {
+            if (presetMode) {
+                presetMode.value = 'focus';
+                presetMode.dispatchEvent(new Event('change'));
+            }
         });
     }
 
