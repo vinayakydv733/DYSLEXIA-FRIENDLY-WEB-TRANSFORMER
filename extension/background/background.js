@@ -34,7 +34,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         const { text, mode, readingLevel, translateLang } = request;
         
         // When deploying, change this to your live Render/Heroku URL!
-        const BACKEND_URL = 'http://localhost:3000/api/ai';
+        const BACKEND_URL = 'https://lexiease-backend-6v2g.onrender.com/api/ai';
         
         fetch(BACKEND_URL, {
             method: 'POST',

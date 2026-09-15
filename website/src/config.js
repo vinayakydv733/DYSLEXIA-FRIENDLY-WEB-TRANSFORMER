@@ -1,6 +1,6 @@
 export const config = {
   CHROME_STORE_URL: "/install", // Points to the visual installation guide
-  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || "http://localhost:3000",
+  BACKEND_URL: import.meta.env.VITE_BACKEND_URL || "https://lexiease-backend-6v2g.onrender.com",
   SUPPORT_EMAIL: "support@dyslexiawebtransformer.com",
   features: {
     subscriptions: true,
