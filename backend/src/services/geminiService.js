@@ -1,7 +1,7 @@
 const { getPrompt } = require('../prompts/accessibilityPrompts');
 
-async function generateAIResponse({ operation, text, readingLevel, language }) {
-    const key = process.env.GEMINI_API_KEY;
+async function generateAIResponse({ operation, text, readingLevel, language, frontendKey }) {
+    const key = frontendKey && frontendKey.trim() !== "" ? frontendKey : process.env.GEMINI_API_KEY;
     
     // Select the appropriate prompt based on the operation and reading level
     const systemPrompt = getPrompt(operation, readingLevel);

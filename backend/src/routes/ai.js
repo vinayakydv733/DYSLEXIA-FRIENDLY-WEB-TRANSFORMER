@@ -6,7 +6,7 @@ const { checkRateLimit } = require('../middleware/rateLimit');
 // POST /api/ai
 router.post('/', checkRateLimit, async (req, res) => {
     try {
-        const { operation, text, readingLevel, language } = req.body;
+        const { operation, text, readingLevel, language, key } = req.body;
         
         if (!operation || !text) {
             return res.status(400).json({ success: false, error: 'Missing required fields: operation, text' });
@@ -17,7 +17,7 @@ router.post('/', checkRateLimit, async (req, res) => {
             return res.status(413).json({ success: false, error: 'Text payload too large. Please select a smaller amount of text.' });
         }
 
-        const aiResponse = await generateAIResponse({ operation, text, readingLevel, language });
+        const aiResponse = await generateAIResponse({ operation, text, readingLevel, language, frontendKey: key });
         
         res.json({ success: true, data: aiResponse });
     } catch (error) {
