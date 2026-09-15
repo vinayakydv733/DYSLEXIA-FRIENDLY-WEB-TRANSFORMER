@@ -1,91 +1,84 @@
-<div align="center">
-  
-# 🏆 Dyslexia-Friendly Web Transformer
-**An Agentic AI-Powered Accessibility Tool for a More Inclusive Web**
+# Dyslexia-Friendly Web Transformer (Production Ready)
 
-[![Manifest](https://img.shields.io/badge/Manifest-V3-blue.svg)](https://developer.chrome.com/docs/extensions/mv3/)
-[![Vanilla JS](https://img.shields.io/badge/JavaScript-Vanilla-yellow.svg)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+## 📌 Project Overview
+The **Dyslexia-Friendly Web Transformer** is an AI-powered accessibility platform designed to help users SEE, READ, LISTEN TO, and UNDERSTAND the web more comfortably. It consists of a **Browser Extension**, a secure **Backend**, and a modern **SaaS Website**.
 
-</div>
+It offers on-the-fly transformations for users with Dyslexia, Visual Impairments, and anyone who benefits from distraction-free reading, right inside their browser.
 
 ---
 
-## 🚀 Overview
+## 🚀 Key Features
 
-The **Dyslexia-Friendly Web Transformer** is a cutting-edge Google Chrome Extension designed to dismantle digital barriers. It integrates advanced accessibility standards, intelligent typography controls, and **Agentic AI** to provide a seamless, inclusive web browsing experience specifically targeted at users with reading and print disabilities like dyslexia, as well as elderly and non-technical users. 
+### 👁 Visual & Typography (Local)
+- **Bionic Reading:** Highlights the start of words to guide your eyes effortlessly.
+- **Reading Ruler / Focus Mode:** Dims the screen and highlights the specific lines you are reading, with adjustable opacity and height.
+- **Color Blindness Filters:** Protanopia, Deuteranopia, Tritanopia, and Achromatopsia simulators and correctors.
+- **Custom Typography:** Dyslexia-friendly fonts (Lexend, Comic Sans), adjustable sizes, line spacing, and high-contrast color palettes.
 
-Built with robust multi-modal design logic, it minimizes cognitive load and visual strain, empowering everyone to browse the web with confidence.
+### 🔊 Listen (Local)
+- **Intelligent Text-to-Speech:** Select any text and click 'Read' to hear it spoken aloud. Features a floating mini-player with Play/Pause/Stop controls and adjustable reading speed.
 
----
-
-## ✨ Key Features
-
-### 🧠 Agentic AI Page Summarization & Simplification
-Powered by Gemini AI, the extension can analyze, summarize, and simplify complex web pages at the click of a button. 
-* **Zero-Setup Experience**: Works out of the box with a free, built-in AI fallback, ensuring non-technical users never have to configure anything.
-* **Pro Mode**: Supports optional user-provided Gemini API keys for power users who want advanced functionality.
-
-### 👁️ Bionic Reading Engine
-Transforms text on any web page to dynamically highlight the initial letters of words. This creates artificial fixation points, guiding the eyes through text more smoothly and allowing users to focus on comprehension rather than getting lost in visual noise.
-
-### 🗣️ Multi-Modal Text-to-Speech (TTS)
-Select any text to hear it spoken aloud! By offering dual-channel (visual and auditory) information delivery, it drastically enhances comprehension and attention retention for users with dyslexia, ADHD, or visual impairments.
-
-### 🌍 Integrated Multi-Language Translation & Dictionary
-A built-in look-up engine enabling users to quickly double-click words and see their definitions or translations without losing context. Includes comprehensive support for multiple languages including Hindi, Spanish, French, German, Chinese, Japanese, Arabic, Russian, Portuguese, and Italian.
-
-### 🎨 Advanced Color Blindness Matrix Filters
-Intelligently re-colors the web page using sophisticated, secure SVG matrix filters. Features specific clinically-researched color palettes:
-- **Protanopia** (Red-Blind)
-- **Deuteranopia** (Green-Blind)
-- **Tritanopia** (Blue-Blind)
-- **Achromatopsia** (Complete Color Blindness)
-- **Anomalous Trichromacy** (Mild)
-
-### 🔤 Comprehensive Typographic & Theme Controls
-Personalize your reading environment exactly how you need it:
-- **Fonts**: Dyslexia-friendly options like Lexend and Comic Sans.
-- **Scaling & Spacing**: Adjust font sizes and line spacing (relaxed, loose, double) for ultimate readability.
-- **Contrast Themes**: High contrast dark mode, warm sepia, soft blue, and custom text coloring to reduce glare and eye strain.
+### 🧠 Understand & AI (Backend Powered)
+- **AI Simplification:** Rewrite complex articles into simple, easy-to-understand English.
+- **Reading Levels:** Choose between Simple (Default), School Level, College Level, or Detailed explanations.
+- **Summarization:** Condense long articles into bite-sized bullet points.
+- **Instant Translation:** Translate difficult words or entire sentences into 10+ languages on the fly.
 
 ---
 
-## 🧰 Tech Stack & Architecture
+## 🛠️ Architecture
 
-Built purely on modern **Manifest V3** standards with modularly separated business logic to guarantee lightning-fast performance and maximum security.
+This project is divided into three core components:
 
-- **Core**: Vanilla JavaScript (ES6+), HTML5, CSS3. **Zero external bloat or dependencies.**
-- **AI Integration**: Gemini API for advanced NLP capabilities.
-- **Browser APIs Used**:
-  - **Chrome Extension API** (Manifest V3)
-  - **Web Speech API** (SpeechSynthesis for Text-to-Speech)
-  - **DOM MutationObserver API** (For highly efficient, non-blocking text processing)
-  - **SVG Matrix Filters** (For zero-lag color blindness manipulations)
-  - **Chrome Storage API** (For real-time syncing of user preferences)
+### 1. `extension/` (The Browser Extension)
+- Built using pure HTML5, CSS3, and Vanilla JavaScript (Manifest V3).
+- Fast, secure, and privacy-focused content scripts that do not require external frameworks.
+- Interacts directly with the DOM to transform webpage text in real-time.
 
----
+### 2. `backend/` (Node.js Express API)
+- A secure proxy for Google Gemini AI integrations.
+- Protects API keys and rate-limits users.
+- Connects the extension to the powerful AI processing required for simplification and summarization.
 
-## 🚀 Installation & Setup
-
-1. Clone or download this repository to your local machine.
-2. Open Google Chrome and navigate to `chrome://extensions/`.
-3. Turn on the **Developer mode** toggle in the top right corner.
-4. Click the **Load unpacked** button and select the `DYSLEXIA-FRIENDLY-WEB-TRANSFORMER` folder.
-5. The extension will install instantly! Pin it to your browser toolbar for quick access.
+### 3. `website/` (React SaaS Platform)
+- A modern, premium landing page and user dashboard built with React and Vite.
+- Includes installation guides, pricing models (Freemium), and account dashboards.
+- Helps onboard users and offers the extension for download.
 
 ---
 
-## ⚙️ Usage
+## 🔧 Installation & Setup
 
-Click the extension icon in your browser toolbar to open the control panel. From there, you can toggle features on or off as needed. 
+### 1. Start the Backend API
+```bash
+cd backend
+npm install
+# Create a .env file based on .env.example and add your GEMINI_API_KEY
+npm run dev
+```
+*The backend will run on `http://localhost:3000`.*
 
-Settings are automatically synchronized—when you toggle Bionic Reading, change the font to Lexend, or select a Color Blindness filter, it persists seamlessly and applies dynamically to your browsing session without lag or jitter.
+### 2. Start the Website (Frontend)
+```bash
+cd website
+npm install
+npm run dev
+```
+*The website will run on `http://localhost:5173`.*
 
-For the **AI Features**, simply click the "Summarize & Simplify Page" button. You can optionally paste your own Gemini API key for uncapped usage, or leave it blank to use the built-in free tier!
+### 3. Load the Extension into Chrome
+1. Open Google Chrome and go to `chrome://extensions/`.
+2. Enable **Developer mode** in the top right corner.
+3. Click **Load unpacked**.
+4. Select the `extension/` directory from this project.
+5. The extension is now active on all websites!
 
 ---
 
-<div align="center">
-  <i>Built with ❤️ for a more accessible web.</i>
-</div>
+## 🔐 Privacy by Design
+- No user passwords or API keys are required on the client side.
+- Page text is only sent to the backend when explicitly triggering an AI feature (Summarize/Simplify/Explain).
+- Local visual features (Bionic, Ruler, TTS) work 100% offline.
+
+---
+*Built with ❤️ for a more accessible web.*

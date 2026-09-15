@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Transformer</title>
+    <!-- Lexend is scientifically proven to improve reading fluency -->
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FDF6E3; /* Warm Sepia, easier on the eyes */
+            --surface-color: #FFFFFF;
+            --border-color: #CBD5E1;
+            --text-primary: #1E293B; /* Dark charcoal, prevents halation */
+            --text-secondary: #475569;
+            --accent: #2563EB; /* Clear blue for actions */
+            --focus-ring: #93C5FD;
+        }
+
+        body {
+            width: 400px;
+            margin: 0;
+            padding: 0;
+            font-family: 'Lexend', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            font-size: 16px; /* Larger base font size */
+        }
+
+        /* Solid Header */
+        .header {
+            padding: 20px;
+            background: var(--surface-color);
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .container {
+            padding: 20px;
+            max-height: 520px;
+            overflow-y: auto;
+        }
+
+        /* Sections */
+        .section-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin: 24px 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 4px;
+        }
+        
+        .section-title:first-child { margin-top: 0; }
+
+        /* Controls */
+        .control-group {
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .control-group.col {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .label-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .label {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .sub-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Large, Accessible Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            flex-shrink: 0;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #CBD5E1;
+            transition: .3s;
+            border-radius: 34px;
+            border: 2px solid transparent;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:focus + .slider { box-shadow: 0 0 0 4px var(--focus-ring); }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        /* Select Dropdowns */
+        .select-input {
+            width: 100%;
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+        .select-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--focus-ring);
+        }
+
+        /* Large Action Buttons */
+        .btn {
+            width: 100%;
+            background: var(--surface-color);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .btn:focus { box-shadow: 0 0 0 4px var(--focus-ring); outline: none; }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .btn-primary:hover { background: #1D4ED8; }
+
+        /* Highlight box for presets */
+        .preset-box {
+            background: #EFF6FF;
+            border: 2px solid #93C5FD;
+        }
+
+        /* Row Layouts */
+        .row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .row > .control-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-title">Web Transformer</div>
+    </div>
+    
+    <div class="container">
+        <!-- PRESETS -->
+        <div class="control-group col preset-box">
+            <div class="label-container" style="width: 100%;">
+                <label for="preset-mode" class="label">Choose a Reading Profile</label>
+                <span class="sub-label">Automatically adjusts all settings</span>
+            </div>
+            <select id="preset-mode" class="select-input" style="background: white;">
+                <option value="custom">Custom (My Settings)</option>
+                <option value="focus">Focus Reading</option>
+                <option value="easier">Easier Reading</option>
+                <option value="listen">Listen & Learn</option>
+                <option value="indic">Hindi / Indic</option>
+            </select>
+        </div>
+
+        <!-- 👁 SEE -->
+        <div class="section-title">See (Visuals)</div>
+        
+        <div class="control-group">
+            <div class="label-container">
+                <span class="label">Bionic Reading</span>
+                <span class="sub-label">Highlights word beginnings</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-bionic">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="row">
+            <div class="control-group col">
+                <label class="label">Font Family</label>
+                <select id="font-family" class="select-input">
+                    <option value="default">Default</option>
+                    <option value="'Lexend', sans-serif">Lexend</option>
+                    <option value="'Comic Sans MS', cursive">Comic Sans</option>
+                    <option value="Arial, sans-serif">Arial</option>
+                </select>
+            </div>
+            <div class="control-group col">
+                <label class="label">Text Size</label>
+                <select id="font-size" class="select-input">
+                    <option value="default">Normal</option>
+                    <option value="18px">Large</option>
+                    <option value="22px">X-Large</option>
+                    <option value="26px">Huge</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="control-group col">
+                <label class="label">Background</label>
+                <select id="bg-color" class="select-input">
+                    <option value="default">Default</option>
+                    <option value="#FDF6E3">Warm Sepia</option>
+                    <option value="#E0F4FF">Soft Blue</option>
+                    <option value="#1A202C">Dark Mode</option>
+                </select>
+            </div>
+            <div class="control-group col">
+                <label class="label">Text Color</label>
+                <select id="text-color" class="select-input">
+                    <option value="default">Default</option>
+                    <option value="#1A202C">Dark Navy</option>
+                    <option value="#000000">Pure Black</option>
+                    <option value="#FFFFFF">White</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group col">
+            <label class="label">Color Blindness Filter</label>
+            <select id="cb-mode" class="select-input">
+                <option value="none">None</option>
+                <option value="protanopia">Type 1 (Red-Blind)</option>
+                <option value="deuteranopia">Type 2 (Green-Blind)</option>
+                <option value="tritanopia">Type 3 (Blue-Blind)</option>
+            </select>
+        </div>
+
+        <!-- 🧠 UNDERSTAND & AI -->
+        <div class="section-title">Understand (AI)</div>
+        
+        <div class="control-group">
+            <div class="label-container">
+                <span class="label">AI Reading Menu</span>
+                <span class="sub-label">Shows when text is selected</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-dict">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="control-group col">
+            <label class="label">AI Reading Level</label>
+            <select id="reading-level" class="select-input">
+                <option value="simple">Simple (Default)</option>
+                <option value="school">School Level</option>
+                <option value="college">College Level</option>
+                <option value="detailed">Detailed</option>
+            </select>
+        </div>
+
+        <div class="control-group col">
+            <label class="label">Translation Language</label>
+            <select id="translate-lang" class="select-input">
+                <option value="none">None</option>
+                <option value="hi">Hindi</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+            </select>
+        </div>
+
+        <button id="btn-ai-summarize" class="btn btn-primary">
+            Summarize Page
+        </button>
+        <button id="btn-ai-simplify" class="btn">
+            Simplify Page
+        </button>
+
+        <!-- 🔊 LISTEN -->
+        <div class="section-title">Listen</div>
+        
+        <div class="control-group">
+            <div class="label-container">
+                <span class="label">Enable Voice (TTS)</span>
+                <span class="sub-label">Reads selected text aloud</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-tts">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="control-group col">
+            <label class="label">Reading Speed</label>
+            <select id="tts-speed" class="select-input">
+                <option value="0.7">Slow</option>
+                <option value="1.0">Normal</option>
+                <option value="1.3">Fast</option>
+                <option value="1.7">Very Fast</option>
+            </select>
+        </div>
+        
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

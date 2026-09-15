@@ -43,11 +43,8 @@ The **Dyslexia-Friendly Web Transformer** is an AI-powered browser-level accessi
 - **AI Modes:** 
   - `📝 Summarize Page`: Short, structured bullet points of the main article.
   - `🧩 Simplify Page`: Rewrites the page in plain, easy-to-read English.
-- **Selected Text Action Menu:** Highlighting text spawns a floating, unobtrusive menu offering:
-  - `💡 Explain`
-  - `🧸 ELI10 (Explain Like I'm 10)`
-  - `🔊 Read Aloud`
-  - `📖 Define`
+- **Instant Translation & Reading:** Instead of an extra click, highlighting text will immediately translate it and read it aloud (if those settings are enabled).
+- **Keyboard Shortcuts:** You can also use `Alt+S` to instantly simplify highlighted text without navigating menus.
 
 ### 3. 📏 Focus Mode Reading Ruler (`readingRuler.js`)
 - A horizontal focus slit that follows the mouse cursor smoothly using `requestAnimationFrame`.
