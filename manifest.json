@@ -37,5 +37,28 @@
     "16": "assets/icons/icon16.png",
     "48": "assets/icons/icon48.png",
     "128": "assets/icons/icon128.png"
+  },
+  "commands": {
+    "toggle-ruler": {
+      "suggested_key": {
+        "default": "Alt+R",
+        "mac": "Alt+R"
+      },
+      "description": "Toggle Reading Ruler"
+    },
+    "simplify-text": {
+      "suggested_key": {
+        "default": "Alt+S",
+        "mac": "Alt+S"
+      },
+      "description": "Simplify selected text"
+    },
+    "read-text": {
+      "suggested_key": {
+        "default": "Alt+T",
+        "mac": "Alt+T"
+      },
+      "description": "Read selected text aloud"
+    }
   }
 }

@@ -153,35 +153,18 @@ async function lookupWord(word, x, y) {
     }
 }
 
-const handleMouseUp = (e) => {
-    setTimeout(() => {
-        const selection = window.getSelection();
-        if (!selection || selection.rangeCount === 0) return;
-        
-        const text = selection.toString();
-        if (text && text.trim().length > 0 && text.trim().length < 300) {
-            lookupWord(text, e.pageX, e.pageY);
-        }
-    }, 10);
-};
+window.lookupWord = lookupWord;
+window.hideTooltip = hideTooltip;
 
-const handleMouseDown = (e) => {
-    if (tooltipElement && tooltipElement.contains(e.target)) return;
-    hideTooltip();
-};
-
+// The enable/disable Dictionary logic is now mainly controlled by the action menu in aiAgent.js
 window.enableDictionary = function() {
     if (dictLoaded) return;
     dictLoaded = true;
     createTooltip();
-    document.addEventListener('mouseup', handleMouseUp);
-    document.addEventListener('mousedown', handleMouseDown);
 };
 
 window.disableDictionary = function() {
     if (!dictLoaded) return;
     dictLoaded = false;
     hideTooltip();
-    document.removeEventListener('mouseup', handleMouseUp);
-    document.removeEventListener('mousedown', handleMouseDown);
 };

@@ -1,190 +1,227 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Dyslexia-Friendly Web Transformer</title>
     <style>
-        body { width: 320px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; margin: 0; background-color: #f0f4f8; color: #333; }
-        h2 { font-size: 16px; margin-top: 0; margin-bottom: 15px; text-align: center; color: #1a365d; }
-        .control-group { background: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s; }
-        .control-group:hover { transform: translateY(-2px); }
+        body { width: 340px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 0; margin: 0; background-color: #f7fafc; color: #2d3748; }
+        .header { background: #2b6cb0; color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 16px; border-bottom: 3px solid #2c5282; }
+        .container { padding: 15px; max-height: 500px; overflow-y: auto; }
+        h2 { font-size: 14px; margin-top: 15px; margin-bottom: 10px; color: #2c5282; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+        .control-group { background: white; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; border: 1px solid #e2e8f0; }
+        .control-group.col { flex-direction: column; align-items: flex-start; gap: 6px; }
         .label-container { display: flex; flex-direction: column; }
-        .label { font-weight: 600; font-size: 14px; }
-        .sub-label { font-size: 11px; color: #718096; margin-top: 3px; }
+        .label { font-weight: 600; font-size: 13px; color: #2d3748; }
+        .sub-label { font-size: 11px; color: #718096; margin-top: 2px; }
+        
         /* Switch styling */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e0; transition: .4s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
-        input:checked + .slider { background-color: #4299e1; }
-        input:checked + .slider:before { transform: translateX(20px); }
-        .color-select { padding: 4px 8px; border-radius: 6px; border: 1px solid #cbd5e0; font-family: inherit; font-size: 13px; background: white; outline: none; cursor: pointer; }
-        .color-select:focus { border-color: #4299e1; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e0; transition: .3s; border-radius: 22px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #3182ce; }
+        input:checked + .slider:before { transform: translateX(18px); }
+        input:focus-visible + .slider { outline: 2px solid #3182ce; outline-offset: 2px; }
+        
+        .color-select, .preset-select, .text-input { width: 100%; padding: 6px 8px; border-radius: 6px; border: 1px solid #cbd5e0; font-family: inherit; font-size: 12px; background: white; outline: none; box-sizing: border-box; }
+        .color-select:focus, .preset-select:focus, .text-input:focus { border-color: #3182ce; box-shadow: 0 0 0 1px #3182ce; }
+        .preset-select { background-color: #ebf8ff; font-weight: bold; color: #2b6cb0; border-color: #63b3ed; }
+        
+        .btn { width: 100%; background: #3182ce; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 8px; transition: background 0.2s; font-size: 13px; }
+        .btn:hover { background: #2b6cb0; }
+        .btn:focus-visible { outline: 2px solid #2b6cb0; outline-offset: 2px; }
+        
+        .privacy-note { font-size: 10px; color: #718096; text-align: center; margin-top: 10px; padding: 10px; background: #edf2f7; border-radius: 6px; }
     </style>
 </head>
 <body>
-    <h2>Web Transformer</h2>
+    <div class="header">Web Transformer</div>
     
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Bionic Reading</span>
-            <span class="sub-label">Highlights word beginnings</span>
+    <div class="container">
+        <!-- PRESETS -->
+        <div class="control-group col" style="background: #e6fffa; border-color: #81e6d9;">
+            <div class="label-container" style="width: 100%;">
+                <label for="preset-mode" class="label">🌟 Accessibility Profile</label>
+                <span class="sub-label">Choose a preset or customize below</span>
+            </div>
+            <select id="preset-mode" class="preset-select">
+                <option value="custom">Custom (My Settings)</option>
+                <option value="dyslexia">Dyslexia Focus</option>
+                <option value="low_vision">Low Vision</option>
+                <option value="focus">Focus Reading</option>
+            </select>
         </div>
-        <label class="switch">
-            <input type="checkbox" id="toggle-bionic">
-            <span class="slider"></span>
-        </label>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Color Blindness</span>
-            <span class="sub-label">Specialized palettes</span>
+        <!-- 📖 READING -->
+        <h2>📖 Reading Aids</h2>
+        
+        <div class="control-group">
+            <div class="label-container">
+                <span class="label">Bionic Reading</span>
+                <span class="sub-label">Highlights word beginnings</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-bionic" aria-label="Toggle Bionic Reading">
+                <span class="slider"></span>
+            </label>
         </div>
-        <select id="cb-mode" class="color-select">
-            <option value="none">None</option>
-            <option value="protanopia">Type 1 (Red)</option>
-            <option value="deuteranopia">Type 2 (Green)</option>
-            <option value="tritanopia">Type 3 (Blue)</option>
-            <option value="achromatopsia">Type 4 (Mono)</option>
-            <option value="mild">Type 5 (Mild)</option>
-        </select>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Background Color</span>
-            <span class="sub-label">For color blindness & dyslexia</span>
+        <div class="control-group">
+            <div class="label-container">
+                <span class="label">Reading Ruler / Focus</span>
+                <span class="sub-label">Dims page & follows mouse</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-ruler" aria-label="Toggle Reading Ruler">
+                <span class="slider"></span>
+            </label>
         </div>
-        <select id="bg-color" class="color-select">
-            <option value="default">Default</option>
-            <option value="#FDF6E3">Warm Sepia</option>
-            <option value="#E0F4FF">Soft Blue</option>
-            <option value="#121212">High Contrast Dark</option>
-        </select>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Text Color</span>
-            <span class="sub-label">For readability</span>
+        <!-- 👁 VISUAL -->
+        <h2>👁 Visual & Typography</h2>
+        
+        <div class="control-group col">
+            <label for="font-family" class="label">Font Family</label>
+            <select id="font-family" class="color-select">
+                <option value="default">Default</option>
+                <option value="'Lexend', sans-serif">Lexend (Dyslexia Friendly)</option>
+                <option value="'Comic Sans MS', cursive, sans-serif">Comic Sans</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+            </select>
         </div>
-        <select id="text-color" class="color-select">
-            <option value="default">Default</option>
-            <option value="#0B192C">Dark Navy</option>
-            <option value="#000000">Pure Black</option>
-            <option value="#FFFFFF">Pure White</option>
-            <option value="#FFFF00">Yellow</option>
-        </select>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Font</span>
-            <span class="sub-label">Dyslexia-friendly options</span>
+        <div style="display: flex; gap: 8px;">
+            <div class="control-group col" style="flex: 1;">
+                <label for="font-size" class="label">Text Size</label>
+                <select id="font-size" class="color-select">
+                    <option value="default">Normal</option>
+                    <option value="18px">Large</option>
+                    <option value="22px">X-Large</option>
+                    <option value="26px">Huge</option>
+                </select>
+            </div>
+            <div class="control-group col" style="flex: 1;">
+                <label for="line-spacing" class="label">Spacing</label>
+                <select id="line-spacing" class="color-select">
+                    <option value="default">Normal</option>
+                    <option value="1.5">Relaxed</option>
+                    <option value="1.8">Loose</option>
+                    <option value="2.0">Double</option>
+                </select>
+            </div>
         </div>
-        <select id="font-family" class="color-select">
-            <option value="default">Default</option>
-            <option value="'Lexend', sans-serif">Lexend</option>
-            <option value="'Comic Sans MS', cursive, sans-serif">Comic Sans</option>
-            <option value="Arial, sans-serif">Arial</option>
-            <option value="Verdana, sans-serif">Verdana</option>
-        </select>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Font Size</span>
-            <span class="sub-label">Adjust text scale</span>
+        <div style="display: flex; gap: 8px;">
+            <div class="control-group col" style="flex: 1;">
+                <label for="bg-color" class="label">Background</label>
+                <select id="bg-color" class="color-select">
+                    <option value="default">Default</option>
+                    <option value="#FDF6E3">Warm Sepia</option>
+                    <option value="#E0F4FF">Soft Blue</option>
+                    <option value="#1A202C">Dark Mode</option>
+                </select>
+            </div>
+            <div class="control-group col" style="flex: 1;">
+                <label for="text-color" class="label">Text Color</label>
+                <select id="text-color" class="color-select">
+                    <option value="default">Default</option>
+                    <option value="#1A202C">Dark Navy</option>
+                    <option value="#000000">Pure Black</option>
+                    <option value="#FFFFFF">White</option>
+                    <option value="#FFFF00">Yellow</option>
+                </select>
+            </div>
         </div>
-        <select id="font-size" class="color-select">
-            <option value="default">Default</option>
-            <option value="16px">Medium</option>
-            <option value="20px">Large</option>
-            <option value="24px">X-Large</option>
-        </select>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Line Spacing</span>
-            <span class="sub-label">Improves readability</span>
+        <div class="control-group col">
+            <label for="cb-mode" class="label">Color Blindness Filter</label>
+            <select id="cb-mode" class="color-select">
+                <option value="none">None</option>
+                <option value="protanopia">Type 1 (Red-Blind)</option>
+                <option value="deuteranopia">Type 2 (Green-Blind)</option>
+                <option value="tritanopia">Type 3 (Blue-Blind)</option>
+                <option value="achromatopsia">Monochrome</option>
+                <option value="mild">High Contrast Mild</option>
+            </select>
         </div>
-        <select id="line-spacing" class="color-select">
-            <option value="default">Default</option>
-            <option value="1.5">Relaxed (1.5)</option>
-            <option value="1.75">Loose (1.75)</option>
-            <option value="2.0">Double (2.0)</option>
-        </select>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Dictionary</span>
-            <span class="sub-label">Double-click for definition</span>
+        <!-- 🔊 LISTEN -->
+        <h2>🔊 Listen (Text-to-Speech)</h2>
+        
+        <div class="control-group">
+            <div class="label-container">
+                <span class="label">Enable TTS Output</span>
+                <span class="sub-label">Used by Selected Text Menu</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-tts" aria-label="Toggle Text to Speech">
+                <span class="slider"></span>
+            </label>
         </div>
-        <label class="switch">
-            <input type="checkbox" id="toggle-dict">
-            <span class="slider"></span>
-        </label>
-    </div>
+        
+        <div class="control-group col">
+            <label for="tts-speed" class="label">Reading Speed</label>
+            <select id="tts-speed" class="color-select">
+                <option value="0.7">Slow</option>
+                <option value="1.0">Normal</option>
+                <option value="1.3">Fast</option>
+                <option value="1.7">Very Fast</option>
+            </select>
+        </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Translate To</span>
-            <span class="sub-label">For Dictionary double-click</span>
+        <!-- 🧠 UNDERSTAND & AI -->
+        <h2>🧠 Understand & AI</h2>
+        
+        <div class="control-group">
+            <div class="label-container">
+                <span class="label">Selected Text Action Menu</span>
+                <span class="sub-label">Highlight text to Explain/Translate</span>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle-dict" aria-label="Toggle Selected Text Menu">
+                <span class="slider"></span>
+            </label>
         </div>
-        <select id="translate-lang" class="color-select">
-            <option value="none">None</option>
-            <option value="hi">Hindi</option>
-            <option value="es">Spanish</option>
-            <option value="fr">French</option>
-            <option value="de">German</option>
-            <option value="zh">Chinese</option>
-            <option value="ja">Japanese</option>
-            <option value="ar">Arabic</option>
-            <option value="ru">Russian</option>
-            <option value="pt">Portuguese</option>
-            <option value="it">Italian</option>
-        </select>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Read Aloud (TTS)</span>
-            <span class="sub-label">Select text to hear it spoken</span>
+        <div class="control-group col">
+            <label for="translate-lang" class="label">Translation Language</label>
+            <select id="translate-lang" class="color-select">
+                <option value="none">None</option>
+                <option value="hi">Hindi</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="zh">Chinese</option>
+                <option value="ja">Japanese</option>
+                <option value="ar">Arabic</option>
+                <option value="ru">Russian</option>
+                <option value="pt">Portuguese</option>
+            </select>
         </div>
-        <label class="switch">
-            <input type="checkbox" id="toggle-tts">
-            <span class="slider"></span>
-        </label>
-    </div>
 
-    <div class="control-group">
-        <div class="label-container">
-            <span class="label">Reading Ruler</span>
-            <span class="sub-label">Focus bar follows mouse</span>
-        </div>
-        <label class="switch">
-            <input type="checkbox" id="toggle-ruler">
-            <span class="slider"></span>
-        </label>
-    </div>
+        <button id="btn-ai-summarize" class="btn">
+            📝 Summarize Whole Page
+        </button>
+        
+        <button id="btn-ai-simplify" class="btn" style="background: #4a5568;">
+            🧩 Simplify Page Language
+        </button>
 
-    <hr style="border:0; border-top: 1px solid #cbd5e0; margin: 15px 0;">
-    <h2 style="font-size: 14px; margin-bottom: 10px; color: #1a365d;">Agentic AI Features</h2>
-    
-    <div class="control-group" style="flex-direction: column; align-items: flex-start; padding-bottom: 8px;">
-        <div class="label-container" style="margin-bottom: 8px;">
-            <span class="label">Optional: Gemini API Key</span>
-            <span class="sub-label">Leave empty to use Free Built-in AI</span>
+        <!-- ⚙️ PREFERENCES -->
+        <h2>⚙️ Preferences</h2>
+        <div class="control-group col">
+            <div class="label-container">
+                <label for="gemini-key" class="label">Gemini API Key (Optional)</label>
+                <span class="sub-label">Leave empty for Free AI (subject to limits)</span>
+            </div>
+            <input type="password" id="gemini-key" class="text-input" placeholder="AIzaSy...">
         </div>
-        <input type="password" id="gemini-key" placeholder="Enter API Key..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e0; border-radius: 4px; box-sizing: border-box; font-family: inherit;">
+
+        <div class="privacy-note">
+            <b>Privacy Note:</b> AI features send page content to external providers. No passwords or inputs are processed.
+        </div>
     </div>
-    
-    <button id="btn-ai-summarize" style="width: 100%; background: #4299e1; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer; margin-bottom: 10px; transition: background 0.2s;">
-        Summarize & Simplify Page
-    </button>
 
     <script src="popup.js"></script>
 </body>

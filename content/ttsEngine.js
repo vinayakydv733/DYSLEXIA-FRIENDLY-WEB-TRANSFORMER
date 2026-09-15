@@ -27,33 +27,13 @@ function speakText(text) {
     window.speechSynthesis.speak(currentUtterance);
 }
 
-const handleSelectionForTTS = (e) => {
-    if (!ttsEnabled) return;
-    
-    // Tiny delay to let selection complete naturally on mouse up
-    setTimeout(() => {
-        const selection = window.getSelection();
-        const text = selection ? selection.toString().trim() : '';
-        
-        if (text) {
-            speakText(text);
-        } else {
-            window.speechSynthesis.cancel();
-        }
-    }, 50);
-};
+window.speakText = speakText;
 
 window.enableTTS = function() {
-    if (ttsEnabled) return;
-    console.log("TTS Enabled");
     ttsEnabled = true;
-    document.addEventListener('mouseup', handleSelectionForTTS);
 };
 
 window.disableTTS = function() {
-    if (!ttsEnabled) return;
-    console.log("TTS Disabled");
     ttsEnabled = false;
-    document.removeEventListener('mouseup', handleSelectionForTTS);
     window.speechSynthesis.cancel();
 };

@@ -83,8 +83,13 @@ function runBionicOnElement(element) {
         acceptNode: function(node) {
             if (!node.parentNode) return NodeFilter.FILTER_REJECT;
             const parentTag = node.parentNode.tagName ? node.parentNode.tagName.toLowerCase() : '';
-            const skipTags = ['script', 'style', 'textarea', 'input', 'code', 'pre', 'noscript'];
+            const skipTags = ['script', 'style', 'textarea', 'input', 'code', 'pre', 'noscript', 'button', 'select'];
             if (skipTags.includes(parentTag)) return NodeFilter.FILTER_REJECT;
+            
+            // Ignore contenteditable fields to prevent breaking rich text editors
+            if (node.parentNode.closest && node.parentNode.closest('[contenteditable="true"]')) {
+                return NodeFilter.FILTER_REJECT;
+            }
             
             if (node.parentNode.classList && (node.parentNode.classList.contains(BIONIC_CLASS) || node.parentNode.classList.contains(BIONIC_BOLD_CLASS))) {
                 return NodeFilter.FILTER_REJECT;

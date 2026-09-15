@@ -138,9 +138,66 @@ chrome.storage.sync.get(['bionicEnabled', 'dictEnabled', 'ttsEnabled', 'bgColor'
     processSettings(settings);
 });
 
-// Listen for updates from popup
+// Listen for updates from popup and background shortcuts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "updateSettings") {
         processSettings(request.settings);
+    } else if (request.action === "keyboardShortcut") {
+        const cmd = request.command;
+        if (cmd === 'toggle-ruler') {
+            const newVal = !window.currentSettings.rulerEnabled;
+            chrome.storage.sync.set({ rulerEnabled: newVal });
+            // Settings update will be handled by the storage listener in popup if open, 
+            // but we must manually process it here for immediate effect
+            window.currentSettings.rulerEnabled = newVal;
+            processSettings(window.currentSettings);
+        } else if (cmd === 'simplify-text') {
+            if (window.triggerSelectionAI) window.triggerSelectionAI('simplify');
+        } else if (cmd === 'read-text') {
+            const sel = window.getSelection().toString().trim();
+            if (sel && window.speakText) window.speakText(sel);
+        }
     }
 });
+
+// Dynamic content processing (MutationObserver)
+let debounceTimer = null;
+const observer = new MutationObserver((mutations) => {
+    if (!window.currentSettings.bionicEnabled) return;
+    
+    // Check if any added nodes are text or contain text
+    let hasNewText = false;
+    for (let m of mutations) {
+        if (m.addedNodes.length > 0) {
+            for (let node of m.addedNodes) {
+                if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim().length > 0) {
+                    hasNewText = true; break;
+                }
+                if (node.nodeType === Node.ELEMENT_NODE && node.innerText && node.innerText.trim().length > 0) {
+                    // Ignore our own injected elements
+                    if (node.id === 'dyslexia-ai-modal' || node.id === 'dyslexia-action-menu' || node.id === 'dyslexia-reading-ruler') {
+                        continue;
+                    }
+                    if (node.classList && (node.classList.contains('bionic-word') || node.classList.contains('bionic-bold'))) {
+                        continue;
+                    }
+                    hasNewText = true; break;
+                }
+            }
+        }
+        if (hasNewText) break;
+    }
+
+    if (hasNewText) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            if (window.applyBionicReadingToElement) {
+                // To be safe and efficient, we just run it on the whole body, 
+                // the tree walker will skip already processed nodes quickly.
+                window.applyBionicReadingToElement(document.body);
+            }
+        }, 800); // 800ms debounce
+    }
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
