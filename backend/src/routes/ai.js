@@ -22,8 +22,8 @@ router.post('/', checkRateLimit, async (req, res) => {
         res.json({ success: true, data: aiResponse });
     } catch (error) {
         console.error("AI Route Error:", error.message);
-        // Do not expose raw errors to the client
-        res.status(503).json({ success: false, error: 'AI assistance is temporarily unavailable. Your reading tools are still available.' });
+        // Expose the error temporarily so the user can debug their API key
+        res.status(503).json({ success: false, error: error.message });
     }
 });
 

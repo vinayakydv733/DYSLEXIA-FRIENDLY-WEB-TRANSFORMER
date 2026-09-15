@@ -20,16 +20,16 @@ async function generateAIResponse({ operation, text, readingLevel, language, fro
             const data = await response.json();
             
             if (data.error) {
-                console.warn("Gemini API Error, falling back...", data.error.message);
-                return await fallbackAI(systemPrompt, text);
+                console.warn("Gemini API Error:", data.error.message);
+                throw new Error("Gemini API Error: " + data.error.message);
             } else if (data.candidates && data.candidates[0]) {
                 return data.candidates[0].content.parts[0].text;
             } else {
-                return await fallbackAI(systemPrompt, text);
+                throw new Error("Gemini API returned an empty response.");
             }
         } catch (error) {
-            console.warn("Gemini Network Error, falling back...", error.message);
-            return await fallbackAI(systemPrompt, text);
+            console.error("Gemini Network/Parsing Error:", error.message);
+            throw new Error(error.message);
         }
     } else {
         // Fallback directly if no key is set
