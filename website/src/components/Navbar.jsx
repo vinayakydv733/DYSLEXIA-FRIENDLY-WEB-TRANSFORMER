@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { config } from '../config';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +58,14 @@ const Navbar = () => {
         </nav>
 
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }} className="desktop-nav">
-          <Link to="/login" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '0.95rem' }}>Login</Link>
+          {user ? (
+            <>
+              <Link to="/dashboard" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '0.95rem' }}>Dashboard</Link>
+              <button onClick={logout} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: 500, fontSize: '0.95rem' }}>Logout</button>
+            </>
+          ) : (
+            <Link to="/login" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '0.95rem' }}>Login</Link>
+          )}
           <a href={config.CHROME_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
             Install Free
           </a>
@@ -77,7 +86,14 @@ const Navbar = () => {
             </Link>
           ))}
           <hr style={{ border: 'none', borderTop: '1px solid var(--border)', margin: '8px 0' }} />
-          <Link to="/login" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '1.1rem' }}>Login</Link>
+          {user ? (
+            <>
+              <Link to="/dashboard" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '1.1rem' }}>Dashboard</Link>
+              <button onClick={logout} style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontWeight: 500, fontSize: '1.1rem', textAlign: 'left', padding: 0 }}>Logout</button>
+            </>
+          ) : (
+            <Link to="/login" style={{ color: 'var(--text-primary)', fontWeight: 500, fontSize: '1.1rem' }}>Login</Link>
+          )}
           <a href={config.CHROME_STORE_URL} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ width: '100%' }}>
             Install Free
           </a>
