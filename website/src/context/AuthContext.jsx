@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
           return;
         }
         // Accept any dummy login for the MVP Demo
-        const dummyUser = { id: '1', email, name: email.split('@')[0], plan: 'free' };
+        const dummyUser = { id: '1', email, name: email.split('@')[0], plan: 'free', aiUsage: 0 };
         setUser(dummyUser);
         localStorage.setItem('lexiease_user', JSON.stringify(dummyUser));
         resolve(dummyUser);
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
           reject(new Error("Please fill in all fields."));
           return;
         }
-        const newUser = { id: Date.now().toString(), name, email, plan: 'free' };
+        const newUser = { id: Date.now().toString(), name, email, plan: 'free', aiUsage: 0 };
         setUser(newUser);
         localStorage.setItem('lexiease_user', JSON.stringify(newUser));
         resolve(newUser);
