@@ -24,7 +24,7 @@ export const config = {
     },
     premium: {
       name: "Premium",
-      price: "₹299/mo",
+      price: "₹149/mo",
       features: [
         "Higher AI usage",
         "AI Simplify & AI Explain",
