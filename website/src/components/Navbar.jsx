@@ -38,9 +38,7 @@ const Navbar = () => {
       width: '100%',
       zIndex: 100,
       transition: 'all 0.3s ease',
-      padding: isScrolled ? '12px 0' : '20px 0',
-      background: isScrolled ? 'var(--card-bg)' : 'transparent',
-      borderBottom: isScrolled ? '1px solid var(--border)' : '1px solid transparent'
+      padding: isScrolled ? '12px 0' : '20px 0'
     }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '700', fontSize: '1.25rem' }}>
